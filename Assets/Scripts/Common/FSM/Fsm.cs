@@ -2,7 +2,7 @@ using System;
 
 namespace Common.FSM
 {
-    public abstract class FsmState<TStateEntity>
+    public abstract class FsmState<TStateEntity, TArgs>
     {
         protected readonly TStateEntity entity;
 
@@ -13,7 +13,7 @@ namespace Common.FSM
 
         public virtual void OnEnter() { }
 
-        public virtual FsmState<TStateEntity> Update()
+        public virtual FsmState<TStateEntity, TArgs> Update(TArgs args)
         {
             return this;
         }
@@ -21,11 +21,11 @@ namespace Common.FSM
         public virtual void OnLeave() { }
     }
     
-    public class Fsm<TEntityState> : IDisposable
+    public class Fsm<TEntityState, TArgs> : IDisposable
     {
-        private FsmState<TEntityState> state;
+        private FsmState<TEntityState, TArgs> state;
 
-        public FsmState<TEntityState> State
+        public FsmState<TEntityState, TArgs> State
         {
             get => state;
             set
@@ -39,18 +39,18 @@ namespace Common.FSM
             }
         }
 
-        public Fsm(FsmState<TEntityState> state)
+        public Fsm(FsmState<TEntityState, TArgs> state)
         {
             this.state = state;
             state?.OnEnter();
         }
 
-        public void Update()
+        public void Update(TArgs args)
         {
             var currentState = State;
             if (currentState != null)
             {
-                State = currentState.Update();
+                State = currentState.Update(args);
             }
         }
 

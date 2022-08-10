@@ -1,17 +1,35 @@
 using System;
 using UnityEngine;
 
-namespace Common.Unity
+namespace Common
 {
-    /// <summary>
-    /// бызовый класс для многих игровых unity объектов, которым важен порядок вызовов и прочие нотификации
-    /// </summary>
-    public abstract class NotifiableMonoBehaviour : MonoBehaviour, IDisposable, IDisposeNotify
+    public interface IDisableNotify
     {
-        private bool isDisposed;
-        
+        event Action OnDisableEvent;
+    }
+    
+    public interface IDisposeNotify
+    {
+        event Action OnDisposeEvent;
+    }
+    
+    public abstract class DisposableObject : IDisposeNotify, IDisposable
+    {
         public event Action OnDisposeEvent;
-        
+
+        public virtual void Dispose()
+        {
+            OnDisposeEvent?.Invoke();
+        }
+    }
+    
+    public class NotifiableMonoBehaviour : MonoBehaviour, IDisposeNotify, IDisposable
+    {
+        private bool isDestroyed;
+        private bool isDisposed;
+
+        public event Action OnDisposeEvent;
+
         private void Awake()
         {
             SafeAwake();
@@ -19,13 +37,7 @@ namespace Common.Unity
 
         private void OnDestroy()
         {
-            if (!isDisposed)
-            {
-                isDisposed = true;
-                OnDisposeEvent?.Invoke();
-                
-                OnDispose();
-            }
+            DisposeSelf();
         }
 
         protected virtual void SafeAwake()
@@ -38,15 +50,24 @@ namespace Common.Unity
 
         public void Dispose()
         {
-            if (!isDisposed)
+            if (isDestroyed != true)
             {
-                isDisposed = true;
-                OnDisposeEvent?.Invoke();
-                
-                OnDispose();
+                Destroy(gameObject);
             }
-            
-            Destroy(this);
+        }
+
+        private void DisposeSelf()
+        {
+            if (isDestroyed || isDisposed)
+                return;
+
+            isDestroyed = true;
+            isDisposed = true;
+
+            OnDisposeEvent?.Invoke();
+            OnDisposeEvent = null;
+
+            OnDispose();
         }
     }
 }
