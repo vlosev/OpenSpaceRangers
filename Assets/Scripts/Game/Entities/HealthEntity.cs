@@ -6,6 +6,7 @@ namespace Game.Entities
 {
     public class HealthEntity : NotifiableMonoBehaviour
     {
+        [Header("..default parameters")]
         [SerializeField] private int hp = 100;
         [SerializeField] private int maxHp = 500;
 

@@ -3,7 +3,17 @@ using UnityEngine;
 
 namespace Game.Entities.Ship
 {
-    public partial class ShipEntity : GameEntity         
+    public class ShipDescription : EntityDescription
+    {
+        public readonly ShipType shipType;
+        
+        public ShipDescription(string name, ShipType shipType) : base(name)
+        {
+            this.shipType = shipType;
+        }
+    }
+    
+    public partial class ShipEntity : GameEntity<ShipDescription>         
     {
         [SerializeField] private HealthEntity healthEntity;
         

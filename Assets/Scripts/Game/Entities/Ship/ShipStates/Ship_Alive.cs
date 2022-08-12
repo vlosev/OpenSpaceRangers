@@ -21,7 +21,10 @@ namespace Game.Entities.Ship
 
             private void OnChangeHealth(float health)
             {
-                entity.fsm.State = new Ship_Dead(entity);
+                if (health <= 0f)
+                {
+                    entity.fsm.State = new Ship_Dead(entity);
+                }
             }
 
             public override FsmState<ShipEntity, float> Update(float args)
