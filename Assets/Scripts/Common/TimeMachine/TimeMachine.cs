@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Common.Unity;
 using UnityEngine;
 
-namespace Common.TimeMachine
+namespace Common
 {
+    public static class TimeMachineOrder
+    {
+        public const int Input = -1;
+        public const int GameLogic = -1;
+        public const int Animation = -1;
+    }
+
     public interface ITimeMachineListener
     {
         public void Update(float dt);
