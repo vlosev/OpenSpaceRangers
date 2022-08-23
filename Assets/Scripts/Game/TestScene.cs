@@ -9,6 +9,8 @@ using UnityEngine;
  */
 public class TestScene : MonoBehaviour
 {
+    [SerializeField] private GameSceneRoot gameSceneRoot;
+    
     private void Start()
     {
         CreateShip("Вася", ShipType.Ranger, Vector2.zero);
