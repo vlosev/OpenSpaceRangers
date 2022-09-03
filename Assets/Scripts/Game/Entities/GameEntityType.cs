@@ -28,6 +28,16 @@ namespace Game.Entities
         /// <summary>
         /// снаряд или что-то другое, несущее урон кому-то или окружающим
         /// </summary>
-        Projectile = 4
+        Projectile = 4,
+        
+        /// <summary>
+        /// звездная система
+        /// </summary>
+        StarSystem = 5,
+
+        /// <summary>
+        /// звездный сектор
+        /// </summary>
+        StarSector = 6,
     }
 }

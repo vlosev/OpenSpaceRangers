@@ -1,6 +1,7 @@
 using Common;
 using Common.AutoDisposableEvents;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game
 {
@@ -30,15 +31,8 @@ namespace Game
 
             TimeMachine.Instance.AddListener(TimeMachineOrder.Input, this, true);
 
-            OnMainClick.Subscribe(() =>
-            {
-                Debug.Log($"get mouse left button down");
-            });
-
-            OnSecondaryClick.Subscribe(() =>
-            {
-                Debug.Log($"get mouse right button down");
-            });
+            OnMainClick.Subscribe(() => Debug.Log($"get mouse left button down"));
+            OnSecondaryClick.Subscribe(() => Debug.Log($"get mouse right button down"));
         }
 
         protected override void OnDispose()
@@ -47,23 +41,36 @@ namespace Game
 
         void ITimeMachineListener.Update(float dt)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                OnMainClick.Notify();
-                return;
-            }
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                OnSecondaryClick.Notify();
-                return;
-            }
-
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 OnContinueDay?.Notify();
                 return;
             }
+
+            var canClick = IsOverUI();
+            if (canClick)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    OnMainClick.Notify();
+                    return;
+                }
+
+                if (Input.GetMouseButtonDown(1))
+                {
+                    OnSecondaryClick.Notify();
+                    return;
+                }
+            }
+        }
+
+        private bool IsOverUI()
+        {
+            //если курсор указывает на какой-то UI объект, не кликаем
+            if (EventSystem.current.IsPointerOverGameObject())
+                return false;
+            
+            return true;
         }
     }
 }

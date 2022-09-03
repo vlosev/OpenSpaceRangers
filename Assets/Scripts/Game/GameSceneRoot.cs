@@ -1,5 +1,7 @@
 using Common;
 using Game;
+using Game.World;
+using GameDebugConsole;
 using GameSystems;
 using UI;
 using UI.Viewmodels;
@@ -14,6 +16,11 @@ public class GameSceneRoot : NotifiableMonoBehaviour
     
     [Header("ui")]
     [SerializeField] private GameUIView gameUIView;
+    [SerializeField] private DebugConsole debugConsole;
+
+    private readonly GameWorld world = new();
+
+    public GameWorld World => world;
 
     protected override void SafeAwake()
     {
@@ -25,6 +32,12 @@ public class GameSceneRoot : NotifiableMonoBehaviour
         gameInput.OnContinueDay.Subscribe(OnContinueDay).SubscribeToDispose(this);
         
         gameUIView.Bind(gameUiVm);
+
+        var worldCtx = new GameWorldContext(gameTimeMachine);
+
+        world.Init(worldCtx);
+        
+        debugConsole.Init(world);
     }
 
     private void OnContinueDay()

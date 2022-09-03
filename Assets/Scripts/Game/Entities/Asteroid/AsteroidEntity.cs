@@ -1,13 +1,12 @@
+using System;
+using Game.World;
+
 namespace Game.Entities.Asteroid
 {
-    public class AsteroidDescription : EntityDescription
+    public class AsteroidEntity : GameEntity<AsteroidDescription, AsteroidEntityState>
     {
-        public AsteroidDescription(string name) : base(name)
+        public AsteroidEntity(Guid guid, GameWorld world) : base(guid, world)
         {
         }
-    }
-    
-    public class AsteroidEntity : GameEntity<AsteroidDescription>
-    {
     }
 }
