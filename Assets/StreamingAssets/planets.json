@@ -1,0 +1,61 @@
+{
+  "items": [
+    {
+      "id": 0,
+      "name": "Меркурий",
+      "inhabited": false,
+      "distance": 5,
+      "view": "planet1"
+    },
+    {
+      "id": 1,
+      "name": "Венера",
+      "inhabited": true,
+      "distance": 7,
+      "view": "planet1"
+    },
+    {
+      "id": 2,
+      "name": "Земля",
+      "inhabited": true,
+      "distance": 8,
+      "race": "люди",
+      "view": "planet1"
+    },
+    {
+      "id": 3,
+      "name": "Марс",
+      "inhabited": true,
+      "distance": 10,
+      "view": "planet1"
+    },
+    {
+      "id": 4,
+      "name": "Юпитер",
+      "inhabited": false,
+      "distance": 10000,
+      "view": "planet1"
+    },
+    {
+      "id": 5,
+      "name": "Сатурн",
+      "inhabited": false,
+      "distance": 10000,
+      "view": "planet1"
+    },
+    {
+      "id": 6,
+      "name": "Уран",
+      "inhabited": false,
+      "distance": 10000,
+      "view": "planet1"
+    },
+    {
+      "id": 7,
+      "name": "Нептун",
+      "inhabited": false,
+      "distance": 10000,
+      "view": "planet1"
+    }
+  ]
+}
