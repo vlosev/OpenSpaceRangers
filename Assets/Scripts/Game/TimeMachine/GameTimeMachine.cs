@@ -99,7 +99,7 @@ namespace GameSystems
                     entity.date.Value = entity.date.Value.AddDays(1);
                     
                     //если было откуда-то требование остановиться, останавливаемся
-                    if (requiredStop)
+                    if (requiredStop || lastDays <= 0)
                         return new GameTimeMachineWait(entity);
 
                     if (lastDays > 0)
