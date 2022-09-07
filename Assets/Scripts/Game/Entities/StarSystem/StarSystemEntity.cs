@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Game.Entities.SpaceStation;
-using Game.Entities.StarSector;
 using Game.World;
 
 namespace Game.Entities.StarSystem
@@ -9,9 +6,11 @@ namespace Game.Entities.StarSystem
     /// <summary>
     /// звездная система, которая знает о своих кораблях и прочих вещах
     /// </summary>
-    public class StarSystemEntity : GameEntity<StarSystemDescription, StarSystemEntityState>
+    public class StarSystemEntity : GameEntity<StarSystemDescription, StarSystemEntityState>, IVisibleEntity
     {
         private Guid starSectorId;
+        
+        public string View => "defaultStar";
         
         public StarSystemEntity(Guid guid, GameWorld world) : base(guid, world)
         {

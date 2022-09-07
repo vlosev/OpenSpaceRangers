@@ -4,6 +4,7 @@ using Common;
 using Game.Entities;
 using Game.Entities.StarSector;
 using GameSystems;
+using UnityEngine;
 
 namespace Game.World
 {
@@ -25,22 +26,41 @@ namespace Game.World
 
         public event Action<GameEntity> OnAddEntity;
         public event Action<GameEntity> OnRemoveEntity;
-        
-        /// <summary>
-        /// метод инициализации мира, его нужно дернуть независимо от того, загрузили мы мир или нет
-        /// </summary>
-        /// <param name="context">контекст мира с зависимостями</param>
-        public void Init(GameWorldContext context)
+        public event Action OnBuildLinks;
+
+        public GameWorld(GameWorldContext ctx)
         {
-            context.GameTimeMachine.AddHandler(0, this).SubscribeToDispose(this);
+            ctx.GameTimeMachine.AddHandler(0, this).SubscribeToDispose(this);
         }
-        
+
+        public void BeforeDay()
+        {
+            Debug.Log($"GameWorld before day");
+            
+            foreach (var entity in entities.Values)
+            {
+                entity.BeforeDay();
+            }
+        }
+
         public void Update(float dt)
         {
-            //TODO: тут будем обновлять весь мир!
+            foreach (var entity in entities.Values)
+            {
+                entity.Update(dt);
+            }
+        }
+
+        public void AfterDay()
+        {
+            foreach (var entity in entities.Values)
+            {
+                entity.AfterDay();
+            }
         }
 
         #region add/remove/get
+
         public bool TryGetEntity<TEntity>(Guid guid, out TEntity entity)
         {
             if (entities.TryGetValue(guid, out var baseEntity) && baseEntity is TEntity entityCast)
@@ -48,11 +68,11 @@ namespace Game.World
                 entity = entityCast;
                 return true;
             }
-            
+
             entity = default;
             return false;
         }
-        
+
         public TEntity AddEntity<TEntity>(GameEntityDescription description) where TEntity : GameEntity
         {
             var entity = CreateEntity(description, Guid.NewGuid());
@@ -79,7 +99,7 @@ namespace Game.World
 
         public bool RemoveEntity(Guid guid)
         {
-            var res = entities.Remove(guid, out var entity); 
+            var res = entities.Remove(guid, out var entity);
             if (res)
             {
                 OnRemoveEntity?.Invoke(entity);
@@ -92,6 +112,7 @@ namespace Game.World
         {
             return RemoveEntity(entity.ID);
         }
+
         #endregion
 
         public void BuildLinks(IReadOnlyDictionary<Guid, IGameEntityState> states)
@@ -112,6 +133,8 @@ namespace Game.World
                         linksBuilder.BuildLinks(null);
                 }
             }
+
+            OnBuildLinks?.Invoke();
         }
     }
 }

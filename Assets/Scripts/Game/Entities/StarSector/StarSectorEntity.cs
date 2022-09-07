@@ -8,13 +8,16 @@ namespace Game.Entities.StarSector
 {
     public class StarSectorEntity : GameEntity<StarSectorDescription, StarSectorEntityState>
     {
-        private readonly List<StarSystemEntity> starSystems = new(); 
-        
+        private readonly List<StarSystemEntity> starSystems = new();
+
+        public IReadOnlyList<StarSystemEntity> Stars => starSystems;
+
         public StarSectorEntity(Guid guid, GameWorld world) : base(guid, world)
         {
         }
 
         #region serialization implementation
+
         protected override StarSectorEntityState GetState()
         {
             return new StarSectorEntityState()
@@ -34,6 +37,7 @@ namespace Game.Entities.StarSector
                         starSystems.Add(system);
             }
         }
+
         #endregion
 
         public void AddStarSystem(StarSystemEntity systemEntity)

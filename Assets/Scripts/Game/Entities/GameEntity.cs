@@ -11,6 +11,13 @@ namespace Game.Entities
     {
         void BuildLinks(IGameEntityState entityState);
     }
+
+    //этот интерфейс является признаком того, что для этого ентити где-то есть визуальное представление
+    public interface IVisibleEntity
+    {
+        string View { get; }
+        GameEntityType EntityType { get; }
+    }
     
     [Serializable]
     public abstract class GameEntity : DisposableObject
@@ -19,8 +26,14 @@ namespace Game.Entities
         public readonly Guid ID;
         public readonly GameWorld World;
 
+        /// <summary>
+        /// тип сущности
+        /// </summary>
         public abstract GameEntityType EntityType { get; }
-        
+
+        /// <summary>
+        /// название сущности в мире
+        /// </summary>
         public abstract string Name { get; }
         
         /// <summary>
@@ -39,6 +52,18 @@ namespace Game.Entities
         /// </summary>
         /// <param name="gameEntityDescription"></param>
         public abstract void Init(GameEntityDescription gameEntityDescription);
+
+        public virtual void BeforeDay()
+        {
+        }
+        
+        public virtual void Update(float dt)
+        {
+        }
+
+        public virtual void AfterDay()
+        {
+        }
     }
     
     /// <summary>
@@ -88,7 +113,7 @@ namespace Game.Entities
 
         protected virtual void OnInit(TDescription description)
         {
-            Debug.Log($"init game entity '{this}'");
+            // Debug.Log($"init game entity '{this}'");
         }
 
         protected virtual void OnBuildLinks(TState state)
@@ -97,13 +122,13 @@ namespace Game.Entities
 
         protected virtual TState GetState()
         {
-            Debug.Log($"get state from entity '{Name}'");
+            // Debug.Log($"get state from entity '{Name}'");
             return default;
         }
 
         protected virtual void SetState(TState state)
         {
-            Debug.Log($"set state to entity '{Name}'");
+            // Debug.Log($"set state to entity '{Name}'");
         }
         
         void ILinksBuilder.BuildLinks(IGameEntityState entityState)

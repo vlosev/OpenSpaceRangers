@@ -95,7 +95,7 @@ namespace Game.World
                 var saveData = JsonUtility.FromJson<SaveData>(json);
                 var states = new Dictionary<Guid, IGameEntityState>();
 
-                void CreateEntitiesFromState<T>(T[] deserializationStates) where T : IGameEntityState
+                void CreateEntitiesFromState<T>(IEnumerable<T> deserializationStates) where T : IGameEntityState
                 {
                     foreach (var state in deserializationStates)
                     {
