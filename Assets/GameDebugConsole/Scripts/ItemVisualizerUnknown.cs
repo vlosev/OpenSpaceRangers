@@ -12,5 +12,10 @@ namespace GameDebugConsole
         {
             nameLabel.text = $"{entity.EntityType}: {entity.Name}";
         }
+
+        public override void Refresh()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

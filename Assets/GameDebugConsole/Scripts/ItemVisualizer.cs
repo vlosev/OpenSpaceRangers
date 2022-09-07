@@ -7,6 +7,8 @@ namespace GameDebugConsole
     public abstract class ItemVisualizer : NotifiableMonoBehaviour
     {
         public abstract void Init(GameEntity entity);
+
+        public abstract void Refresh();
     }
     
     public abstract class ItemVisualizer<T> : ItemVisualizer

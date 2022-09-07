@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Common;
 using Game.Entities;
 using Game.World;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GameDebugConsole
@@ -38,6 +37,7 @@ namespace GameDebugConsole
         {
             this.world = world;
 
+            world.OnBuildLinks += OnBuildLinks;
             world.OnAddEntity += OnAddEntity;
             world.OnRemoveEntity += OnRemoveEntity;
         }
@@ -46,6 +46,7 @@ namespace GameDebugConsole
         {
             if (world != null)
             {
+                world.OnBuildLinks -= OnBuildLinks;
                 world.OnAddEntity += OnAddEntity;
                 world.OnRemoveEntity += OnRemoveEntity;
             }
@@ -53,16 +54,22 @@ namespace GameDebugConsole
             base.OnDispose();
         }
 
+        private void OnBuildLinks()
+        {
+            foreach (var visualizer in visualizers.Values)
+                visualizer.Refresh();
+        }
+        
         private void OnAddEntity(GameEntity entity)
         {
-            var visualizer = visualizersPrefabsCache.TryGetValue(entity.EntityType, out var visualizerPrefab) 
-                ? Instantiate(visualizerPrefab, visualizersParent, false) 
-                : Instantiate(unknownVisualizerPrefab, visualizersParent, false);
-            
-            visualizers.Add(entity, visualizer);
-            
-            visualizer.Init(entity);
-            visualizer.gameObject.SetActive(true);
+            if (visualizersPrefabsCache.TryGetValue(entity.EntityType, out var visualizerPrefab))
+            {
+                var visualizer = Instantiate(visualizerPrefab, visualizersParent, false);
+                visualizers.Add(entity, visualizer);
+
+                visualizer.Init(entity);
+                visualizer.gameObject.SetActive(true);
+            }
         }
         
         private void OnRemoveEntity(GameEntity entity)
