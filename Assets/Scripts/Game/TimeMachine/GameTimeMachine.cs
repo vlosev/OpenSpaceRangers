@@ -12,7 +12,9 @@ namespace GameSystems
     /// </summary>
     public interface IGameTimeMachineListener
     {
+        public void BeforeDay();
         public void Update(float dt);
+        public void AfterDay();
     }
     
     public class GameTimeMachine : NotifiableMonoBehaviour, ITimeMachineListener
@@ -74,6 +76,11 @@ namespace GameSystems
             {
                 entity.OnStop += OnStop;
                 entity.inProgress.Value = true;
+
+                foreach (var listener in sortedListeners)
+                {
+                    listener.BeforeDay();
+                }
             }
 
             public override FsmState<GameTimeMachine, float> Update(float dt)
@@ -81,7 +88,9 @@ namespace GameSystems
                 //считаем линейное время дня и тикаем всех листенеров
                 var t = Mathf.Clamp01(elapsedTime / entity.secondsPerDay);
                 foreach (var listener in sortedListeners)
+                {
                     listener.Update(t);
+                }
                 
                 //проверяем, нужно ли после этого дня остановиться или продолжаем?
                 if (elapsedTime >= entity.secondsPerDay)
@@ -103,6 +112,11 @@ namespace GameSystems
 
             public override void OnLeave()
             {
+                foreach (var listener in sortedListeners)
+                {
+                    listener.AfterDay();
+                }
+
                 entity.OnStop -= OnStop;
             }
 
